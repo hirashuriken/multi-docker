@@ -6,7 +6,7 @@ before_install:
   - docker build -t hirashuriken/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true hirashuriken/react-test npm test
+  - docker run -e CI=true hirashuriken/react-test npm run test
 
 after_success: 
   - docker build -t hirashuriken/multi-client ./client
