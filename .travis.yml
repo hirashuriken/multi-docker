@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t hirashuriken/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true hirashuriken/react-test npm test
+
+after_success: 
+  - docker build -t hirashuriken/multi-client ./client
+  - docker build -t hirashuriken/multi-nginx ./nginx
+  - docker build -t hirashuriken/multi-server ./server
+  - docker build -t hirashuriken/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push hirashuriken/multi-client
+  - docker push hirashuriken/multi-nginx
+  - docker push hirashuriken/multi-server
+  - docker push hirashuriken/multi-worker
